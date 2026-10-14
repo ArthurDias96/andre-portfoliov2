@@ -297,9 +297,7 @@
     <h2>Vamos criar<br>juntos?</h2>
     <div class="cta">
       <a class="btn primary js-whatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
-      <a class="btn ghost js-instagram" href="#" target="_blank" rel="noopener">Instagram</a>
-      <a class="btn ghost js-email" href="#">E-mail</a>
-    </div>
+      <a class="btn ghost js-instagram" href="#" target="_blank" rel="noopener">Instagram</a>    </div>
   </div>
 </section>
 
@@ -315,20 +313,18 @@
   const CONTATO = {
     instagram: "andremmartins0",       // só o @, sem o símbolo
     whatsapp:  "5511913453636",        // DDI + DDD + número, só dígitos
-    email:     "contato@exemplo.com",
     mensagem:  "Olá, André! Vi seu portfólio e gostaria de saber mais sobre a produção de conteúdo para o meu perfil/negócio. Podemos conversar?"
   };
   // ===== PORTFÓLIO: COLE AQUI OS LINKS DOS REELS/POSTS ESCOLHIDOS =====
   // No Instagram: abra o vídeo → "..." → "Copiar link". Título é opcional.
   const VIDEOS = [
-    // arquivo: vídeo na pasta "videos" (fica só o vídeo, sem moldura do Instagram).
-    // Se o arquivo não existir, a página usa o link do Instagram no lugar.
-    { arquivo: "videos/clip01.mp4", link: "https://www.instagram.com/p/DdEuPY7x0vZ/" },
-    { arquivo: "videos/clip02.mp4", link: "https://www.instagram.com/p/DdEt_hhRAhK/" },
-    { arquivo: "videos/clip03.mp4", link: "https://www.instagram.com/p/Dbml0PsMjup/" },
-    { arquivo: "videos/clip04.mp4", link: "https://www.instagram.com/reels/Dbmr6i3uGLH/" },
-    { arquivo: "videos/clip05.mp4", link: "https://www.instagram.com/reels/DbmrO3ZvJXQ/" },
-    { arquivo: "videos/clip06.mp4", link: "https://www.instagram.com/reels/Dbms8eLhP2E/" },
+    // Opcional: adicione  arquivo: "videos/clip01.mp4"  para mostrar só o vídeo, sem a moldura do Instagram.
+    { link: "https://www.instagram.com/p/DdEuPY7x0vZ/" },
+    { link: "https://www.instagram.com/p/DdEt_hhRAhK/" },
+    { link: "https://www.instagram.com/p/Dbml0PsMjup/" },
+    { link: "https://www.instagram.com/reels/Dbmr6i3uGLH/" },
+    { link: "https://www.instagram.com/reels/DbmrO3ZvJXQ/" },
+    { link: "https://www.instagram.com/reels/Dbms8eLhP2E/" },
   ];
   // ====================================================================
 
@@ -390,9 +386,7 @@
   function pad2(n) { return String(n).padStart(2, "0"); }
 
   document.querySelectorAll(".js-instagram").forEach(a => a.href = `https://instagram.com/${CONTATO.instagram}`);
-  document.querySelectorAll(".js-whatsapp").forEach(a => a.href = `https://wa.me/${CONTATO.whatsapp}?text=${encodeURIComponent(CONTATO.mensagem)}`);
-  document.querySelectorAll(".js-email").forEach(a => a.href = `mailto:${CONTATO.email}`);
-  document.getElementById("year").textContent = new Date().getFullYear();
+  document.querySelectorAll(".js-whatsapp").forEach(a => a.href = `https://wa.me/${CONTATO.whatsapp}?text=${encodeURIComponent(CONTATO.mensagem)}`);  document.getElementById("year").textContent = new Date().getFullYear();
 
   // Timecode rodando no visor (HH:MM:SS:FF a 30fps)
   const tc = document.getElementById("tc");
