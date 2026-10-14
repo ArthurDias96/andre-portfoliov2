@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>André Martins — Videomaker</title>
+<meta name="description" content="André Martins — videomaker mobile e estrategista de conteúdo para saúde, beleza e estética.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg-2: #121212;
+    --line: #262626;
+    --text: #f2f2f2;
+    --muted: #8a8a8a;
+    --rec: #ff3b30;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+    --sans: "Space Grotesk", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  .mono { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+  /* ---------- NAV ---------- */
+  nav {
+    position: fixed; inset: 0 0 auto 0; z-index: 10;
+    background: rgba(10,10,10,.75); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .logo { font-family: var(--mono); font-weight: 500; font-size: 14px; letter-spacing: .1em; }
+  .logo span { color: var(--rec); }
+  nav ul { display: flex; gap: 28px; list-style: none; }
+  nav ul a { font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); transition: color .2s; }
+  nav ul a:hover { color: var(--text); }
+
+  /* ---------- HERO (visor de câmera) ---------- */
+  .hero { min-height: 100svh; display: flex; align-items: center; padding: 100px 0 60px; position: relative; overflow: hidden; }
+  .viewfinder { position: absolute; inset: 80px 24px 24px; pointer-events: none; }
+  .viewfinder i { position: absolute; width: 28px; height: 28px; border-color: var(--text); border-style: solid; opacity: .5; }
+  .viewfinder i:nth-child(1) { top: 0; left: 0; border-width: 2px 0 0 2px; }
+  .viewfinder i:nth-child(2) { top: 0; right: 0; border-width: 2px 2px 0 0; }
+  .viewfinder i:nth-child(3) { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
+  .viewfinder i:nth-child(4) { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+  .hud { position: absolute; display: flex; gap: 18px; align-items: center; }
+  .hud.top-l { top: 14px; left: 44px; }
+  .hud.top-r { top: 14px; right: 44px; }
+  .hud.bot-l { bottom: 14px; left: 44px; }
+  .hud.bot-r { bottom: 14px; right: 44px; }
+  .rec { display: flex; align-items: center; gap: 8px; color: var(--text); }
+  .rec::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--rec); animation: blink 1.2s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .battery { display: inline-block; width: 22px; height: 10px; border: 1px solid var(--muted); position: relative; }
+  .battery::before { content: ""; position: absolute; inset: 1px 6px 1px 1px; background: var(--muted); }
+
+  .hero-content { position: relative; }
+  .hero h1 { font-size: clamp(44px, 9vw, 112px); line-height: .95; font-weight: 700; letter-spacing: -.03em; margin: 18px 0 24px; }
+  .hero h1 em { font-style: normal; color: var(--muted); }
+  .hero p.lead { max-width: 560px; font-size: clamp(17px, 2vw, 20px); color: #cfcfcf; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+  .btn {
+    font-family: var(--mono); font-size: 13px; text-transform: uppercase; letter-spacing: .08em;
+    padding: 14px 22px; border: 1px solid var(--text); transition: all .2s;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .btn.primary { background: var(--text); color: var(--bg); }
+  .btn.primary:hover { background: var(--rec); border-color: var(--rec); color: var(--text); }
+  .btn.ghost:hover { background: var(--text); color: var(--bg); }
+
+  /* ---------- SEÇÕES ---------- */
+  section { padding: 110px 0; border-top: 1px solid var(--line); }
+  .sec-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 48px; }
+  .sec-head .num { color: var(--rec); }
+  h2 { font-size: clamp(30px, 4.5vw, 52px); line-height: 1.05; letter-spacing: -.02em; font-weight: 700; }
+
+  /* Sobre */
+  .about { display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; align-items: start; }
+  .about p { color: #cfcfcf; margin-bottom: 18px; font-size: 17px; }
+  .stat { border: 1px solid var(--line); padding: 32px; background: var(--bg-2); }
+  .stat .big { font-size: 96px; font-weight: 700; line-height: 1; letter-spacing: -.04em; }
+  .stat .big small { font-size: 28px; color: var(--muted); margin-left: 6px; }
+  .stat p { margin-top: 12px; color: #cfcfcf; }
+  .stat + .stat { margin-top: 16px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .tag { font-family: var(--mono); font-size: 12px; padding: 6px 12px; border: 1px solid var(--line); color: var(--text); }
+
+  /* Serviços */
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .card { padding: 32px 28px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); transition: background .25s; }
+  .card:hover { background: var(--bg-2); }
+  .card .mono { display: block; margin-bottom: 28px; }
+  .card h3 { font-size: 22px; font-weight: 500; margin-bottom: 8px; }
+  .card p { color: var(--muted); font-size: 15px; }
+
+  /* Processo — linha do tempo de edição */
+  .timeline { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+  .timeline::before { content: ""; position: absolute; top: 22px; left: 0; right: 0; height: 1px; background: var(--line); }
+  .step { position: relative; padding-right: 24px; }
+  .step .marker { width: 44px; height: 44px; border: 1px solid var(--text); background: var(--bg); display: grid; place-items: center; font-family: var(--mono); font-size: 13px; position: relative; }
+  .step .tc { margin: 20px 0 8px; }
+  .step h3 { font-size: 20px; font-weight: 500; margin-bottom: 6px; }
+  .step p { color: var(--muted); font-size: 15px; }
+
+  /* Portfólio — formato vertical 9:16 */
+  .reels { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .reel {
+    aspect-ratio: 9 / 16; background: var(--bg-2); border: 1px solid var(--line);
+    position: relative; overflow: hidden; display: flex; align-items: flex-end; padding: 16px;
+  }
+  .reel video, .reel img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .reel .label { position: relative; z-index: 1; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
+  .reel .play {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 54px; height: 54px; border: 1px solid var(--muted); border-radius: 50%;
+    display: grid; place-items: center; color: var(--muted);
+  }
+  .reel::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 60%, rgba(0,0,0,.7)); }
+  .reels-note { margin-top: 24px; }
+  /* Embeds do Instagram */
+  .reels.embeds { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); align-items: start; }
+  .reel.video { cursor: pointer; }
+  .reel .sound {
+    position: absolute; top: 12px; right: 12px; z-index: 1;
+    font-size: 11px; color: var(--text); background: rgba(0,0,0,.5); padding: 4px 8px;
+  }
+  .ig-item { border: 1px solid var(--line); background: var(--bg-2); padding: 12px; }
+  .ig-item .mono { display: block; margin-bottom: 10px; }
+  .ig-item .instagram-media { min-width: 0 !important; width: 100% !important; margin: 0 !important; border-radius: 0 !important; }
+
+  /* Citação */
+  .quote { font-size: clamp(26px, 3.6vw, 44px); line-height: 1.2; letter-spacing: -.02em; max-width: 900px; }
+  .quote span { color: var(--muted); }
+
+  /* Contato */
+  .contact { text-align: center; }
+  .contact h2 { font-size: clamp(38px, 7vw, 88px); margin: 18px 0 36px; }
+  .contact .cta { justify-content: center; }
+
+  footer { border-top: 1px solid var(--line); padding: 28px 0; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+
+  /* Animação de entrada */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s ease, transform .8s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ---------- RESPONSIVO ---------- */
+  @media (max-width: 900px) {
+    nav ul { display: none; }
+    .about { grid-template-columns: 1fr; gap: 40px; }
+    .grid { grid-template-columns: repeat(2, 1fr); }
+    .timeline { grid-template-columns: 1fr 1fr; row-gap: 40px; }
+    .timeline::before { display: none; }
+    .reels { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .wrap { padding: 0 16px; }
+    .viewfinder { inset: 72px 12px 12px; }
+    .hud.top-l, .hud.bot-l { left: 30px; }
+    .hud.top-r, .hud.bot-r { right: 30px; }
+    .hud .hide-sm { display: none; }
+    section { padding: 80px 0; }
+    .grid { grid-template-columns: 1fr; }
+    .timeline { grid-template-columns: 1fr; }
+    .stat .big { font-size: 72px; }
+    .btn { width: 100%; justify-content: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .rec::before { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="#" class="logo">ANDRÉ<span>●</span>MARTINS</a>
+    <ul>
+      <li><a href="#sobre">Sobre</a></li>
+      <li><a href="#servicos">Serviços</a></li>
+      <li><a href="#processo">Processo</a></li>
+      <li><a href="#trabalhos">Trabalhos</a></li>
+      <li><a href="#contato">Contato</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="viewfinder" aria-hidden="true">
+    <i></i><i></i><i></i><i></i>
+    <div class="hud top-l mono"><span class="rec">REC</span><span id="tc">00:00:00:00</span></div>
+    <div class="hud top-r mono"><span class="hide-sm">4K · 30FPS</span><span class="battery"></span></div>
+    <div class="hud bot-l mono"><span class="hide-sm">ISO 400</span><span>9:16</span></div>
+    <div class="hud bot-r mono"><span>SÃO PAULO · BR</span></div>
+  </div>
+
+  <div class="wrap hero-content">
+    <span class="mono">Videomaker mobile · Estrategista de conteúdo</span>
+    <h1>André<br>Martins<em>.</em></h1>
+    <p class="lead">Transformo a essência de profissionais e marcas de <strong>saúde, beleza e estética</strong> em conteúdo com estratégia, identidade e propósito.</p>
+    <div class="cta">
+      <a class="btn primary js-whatsapp" href="#" target="_blank" rel="noopener">Quero meu conteúdo →</a>
+      <a class="btn ghost js-instagram" href="#" target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </div>
+</header>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="mono num">01</span><h2>Mais do que<br>gravar vídeos.</h2></div>
+    <div class="about">
+      <div class="reveal">
+        <p>Sou videomaker mobile e estrategista de conteúdo, com experiência na construção de narrativas digitais para grandes players do mercado da beleza e da estética.</p>
+        <p>Durante cinco anos, trabalhei ao lado da <strong>Natalia Beauty</strong>, participando ativamente de um ecossistema de crescimento, posicionamento e fortalecimento de marca. Acompanhei de perto a dinâmica de grandes operações e construí um know-how que vai muito além da captação e da edição.</p>
+        <p>Aprendi, na prática, a transformar o dia a dia de profissionais e marcas em conteúdo estratégico, contando histórias que despertam interesse, aproximam pessoas e geram oportunidades de negócio.</p>
+      </div>
+      <div class="reveal">
+        <div class="stat">
+          <div class="big">5<small>anos</small></div>
+          <p>ao lado da Natalia Beauty, construindo conteúdo para uma das maiores marcas de beleza do país.</p>
+        </div>
+        <div class="stat">
+          <span class="mono">Segmentos</span>
+          <div class="tags">
+            <span class="tag">Saúde</span>
+            <span class="tag">Beleza</span>
+            <span class="tag">Estética</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVIÇOS -->
+<section id="servicos">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="mono num">02</span><h2>O que eu faço</h2></div>
+    <div class="grid reveal">
+      <div class="card"><span class="mono">/01</span><h3>Planejamento</h3><p>Estratégia de conteúdo alinhada ao posicionamento e aos objetivos da marca.</p></div>
+      <div class="card"><span class="mono">/02</span><h3>Roteirização</h3><p>Roteiros que comunicam valor e prendem a atenção nos primeiros segundos.</p></div>
+      <div class="card"><span class="mono">/03</span><h3>Captação mobile</h3><p>Produção ágil e de qualidade, pensada nativamente para o formato vertical.</p></div>
+      <div class="card"><span class="mono">/04</span><h3>Edição & Storytelling</h3><p>Narrativas que fortalecem autoridade e geram conexão com o público.</p></div>
+      <div class="card"><span class="mono">/05</span><h3>Cobertura de eventos</h3><p>Registro estratégico de eventos, lançamentos e bastidores.</p></div>
+      <div class="card"><span class="mono">/06</span><h3>Stories & Reels</h3><p>Estratégias específicas para cada formato, com foco em alcance e conversão.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESSO -->
+<section id="processo">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="mono num">03</span><h2>Do briefing<br>ao play.</h2></div>
+    <div class="timeline reveal">
+      <div class="step"><div class="marker">01</div><div class="mono tc">00:00:00</div><h3>Essência</h3><p>Entendo quem você é, seu público e o que precisa ser comunicado.</p></div>
+      <div class="step"><div class="marker">02</div><div class="mono tc">00:00:15</div><h3>Estratégia</h3><p>Planejamento de pautas, formatos e roteiros com propósito.</p></div>
+      <div class="step"><div class="marker">03</div><div class="mono tc">00:00:30</div><h3>Captação</h3><p>Gravação mobile, ágil e natural, no seu dia a dia.</p></div>
+      <div class="step"><div class="marker">04</div><div class="mono tc">00:00:45</div><h3>Edição</h3><p>Montagem, ritmo e storytelling, pronto para publicar.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- TRABALHOS -->
+<section id="trabalhos">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="mono num">04</span><h2>Trabalhos</h2></div>
+    <!-- Os vídeos são gerados a partir da lista VIDEOS no script, no fim do arquivo -->
+    <div class="reels reveal" id="reels"></div>
+    <p class="mono reels-note">→ Veja mais no <a class="js-instagram" href="#" target="_blank" rel="noopener" style="color:var(--text);text-decoration:underline">Instagram</a></p>
+  </div>
+</section>
+
+<!-- CITAÇÃO -->
+<section>
+  <div class="wrap">
+    <p class="quote reveal">“Meu trabalho não é apenas gravar vídeos. <span>É entender a essência de cada profissional e transformar isso em conteúdo com estratégia, identidade e propósito.”</span></p>
+  </div>
+</section>
+
+<!-- CONTATO -->
+<section id="contato" class="contact">
+  <div class="wrap reveal">
+    <span class="mono"><span class="rec" style="display:inline-flex">Pronto para gravar</span></span>
+    <h2>Vamos criar<br>juntos?</h2>
+    <div class="cta">
+      <a class="btn primary js-whatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn ghost js-instagram" href="#" target="_blank" rel="noopener">Instagram</a>
+      <a class="btn ghost js-email" href="#">E-mail</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap mono">
+    <span>© <span id="year"></span> André Martins</span>
+    <span>Videomaker mobile · Estrategista de conteúdo</span>
+  </div>
+</footer>
+
+<script>
+  // ===== EDITE AQUI OS CONTATOS =====
+  const CONTATO = {
+    instagram: "andremmartins0",       // só o @, sem o símbolo
+    whatsapp:  "5511999999999",        // DDI + DDD + número, só dígitos
+    email:     "contato@exemplo.com",
+    mensagem:  "Olá André! Vi seu portfólio e quero conversar sobre conteúdo."
+  };
+  // ===== PORTFÓLIO: COLE AQUI OS LINKS DOS REELS/POSTS ESCOLHIDOS =====
+  // No Instagram: abra o vídeo → "..." → "Copiar link". Título é opcional.
+  const VIDEOS = [
+    // arquivo: vídeo na pasta "videos" (fica só o vídeo, sem moldura do Instagram).
+    // Se o arquivo não existir, a página usa o link do Instagram no lugar.
+    { arquivo: "videos/clip01.mp4", link: "https://www.instagram.com/p/DdEuPY7x0vZ/" },
+    { arquivo: "videos/clip02.mp4", link: "https://www.instagram.com/p/DdEt_hhRAhK/" },
+    { arquivo: "videos/clip03.mp4", link: "https://www.instagram.com/p/Dbml0PsMjup/" },
+    { arquivo: "videos/clip04.mp4", link: "https://www.instagram.com/reels/Dbmr6i3uGLH/" },
+    { arquivo: "videos/clip05.mp4", link: "https://www.instagram.com/reels/DbmrO3ZvJXQ/" },
+    { arquivo: "videos/clip06.mp4", link: "https://www.instagram.com/reels/Dbms8eLhP2E/" },
+  ];
+  // ====================================================================
+
+  // Monta a grade: vídeo próprio (.mp4) quando existe, senão embed do Instagram
+  const reels = document.getElementById("reels");
+  const nome = (v, i) => `CLIP ${pad2(i + 1)}${v.titulo ? " · " + v.titulo : ""}`;
+
+  function embedInstagram(v, i, alvo) {
+    // Normaliza /p/, /reel/ e /reels/ para o formato que o embed aceita
+    const code = ((v.link || "").match(/instagram\.com\/(?:p|reels?|tv)\/([\w-]+)/) || [])[1];
+    if (!code) { alvo.remove(); return; }
+    const link = `https://www.instagram.com/p/${code}/`;
+    alvo.className = "ig-item";
+    alvo.innerHTML = `
+      <span class="mono">${nome(v, i)}</span>
+      <blockquote class="instagram-media" data-instgrm-permalink="${link}" data-instgrm-version="14"
+        style="background:#fff;border:0;"><a href="${link}" target="_blank" rel="noopener">Ver no Instagram</a></blockquote>`;
+    if (window.instgrm) window.instgrm.Embeds.process();
+    else if (!document.getElementById("ig-embed")) {
+      const s = document.createElement("script");
+      s.id = "ig-embed"; s.async = true; s.src = "https://www.instagram.com/embed.js";
+      document.body.appendChild(s);
+    }
+  }
+
+  // Vídeos tocam mudos em loop só quando aparecem na tela
+  const playIO = new IntersectionObserver(entries => entries.forEach(e => {
+    e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause();
+  }), { threshold: .4 });
+
+  if (VIDEOS.length) {
+    reels.classList.add("embeds");
+    VIDEOS.forEach((v, i) => {
+      const item = document.createElement("div");
+      reels.appendChild(item);
+      if (!v.arquivo) return embedInstagram(v, i, item);
+
+      item.className = "reel video";
+      item.innerHTML = `
+        <video src="${v.arquivo}" muted loop playsinline preload="metadata"></video>
+        <span class="label">${nome(v, i)}</span>
+        <span class="sound mono">🔇 Som</span>`;
+      const video = item.querySelector("video");
+      video.addEventListener("error", () => embedInstagram(v, i, item));
+      playIO.observe(video);
+      // Clique liga/desliga o som (e silencia os outros)
+      item.addEventListener("click", () => {
+        const ligar = video.muted;
+        reels.querySelectorAll("video").forEach(o => { o.muted = true; o.parentElement.querySelector(".sound").textContent = "🔇 Som"; });
+        video.muted = !ligar;
+        item.querySelector(".sound").textContent = ligar ? "🔊 Som" : "🔇 Som";
+        video.play().catch(() => {});
+      });
+    });
+  } else {
+    ["Reels · Beleza", "Evento · Cobertura", "Stories · Estética", "Bastidores"].forEach(label =>
+      reels.insertAdjacentHTML("beforeend", `<div class="reel"><div class="play">▶</div><span class="label">${label}</span></div>`));
+  }
+  function pad2(n) { return String(n).padStart(2, "0"); }
+
+  document.querySelectorAll(".js-instagram").forEach(a => a.href = `https://instagram.com/${CONTATO.instagram}`);
+  document.querySelectorAll(".js-whatsapp").forEach(a => a.href = `https://wa.me/${CONTATO.whatsapp}?text=${encodeURIComponent(CONTATO.mensagem)}`);
+  document.querySelectorAll(".js-email").forEach(a => a.href = `mailto:${CONTATO.email}`);
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  // Timecode rodando no visor (HH:MM:SS:FF a 30fps)
+  const tc = document.getElementById("tc");
+  const start = performance.now();
+  const pad = n => String(n).padStart(2, "0");
+  (function tick() {
+    const t = (performance.now() - start) / 1000;
+    tc.textContent = `${pad(Math.floor(t / 3600))}:${pad(Math.floor(t / 60) % 60)}:${pad(Math.floor(t) % 60)}:${pad(Math.floor(t * 30) % 30)}`;
+    requestAnimationFrame(tick);
+  })();
+
+  // Revela as seções ao rolar
+  const io = new IntersectionObserver(entries => entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+  }), { threshold: .15 });
+  document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+</script>
+</body>
+</html>
